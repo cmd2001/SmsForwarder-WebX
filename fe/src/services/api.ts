@@ -1,7 +1,7 @@
 import axios from 'axios';
-import config from './config';
 import { redirect } from 'react-router';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const cleanToken = () => {
   localStorage.removeItem('accessToken');
 };
@@ -17,9 +17,10 @@ export const fetchConversations = async (
   limit: number = 10,
 ) => {
   const accessToken = localStorage.getItem('accessToken');
+
   try {
     const response = await axios.get(
-      `${config.backendUrl}/api/v1/conversation/list?start=${start}&limit=${limit}`,
+      `${BACKEND_URL}/api/v1/conversation/list?start=${start}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -46,7 +47,7 @@ export const fetchMessages = async (
   const accessToken = localStorage.getItem('accessToken');
   try {
     const response = await axios.get(
-      `${config.backendUrl}/api/v1/conversation?id=${conversationId}&start=${start}&limit=${limit}`,
+      `${BACKEND_URL}/api/v1/conversation?id=${conversationId}&start=${start}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -69,7 +70,7 @@ export const sendMessage = async (conversationId: string, content: string) => {
   const accessToken = localStorage.getItem('accessToken');
   try {
     const response = await axios.post(
-      `${config.backendUrl}/api/v1/conversation`,
+      `${BACKEND_URL}/api/v1/conversation`,
       {
         conversation_id: conversationId,
         content,
@@ -94,7 +95,7 @@ export const sendMessage = async (conversationId: string, content: string) => {
 
 export const handleLogin = async (username: string, password: string) => {
   try {
-    const response = await axios.post(`${config.backendUrl}/api/v1/login`, {
+    const response = await axios.post(`${BACKEND_URL}/api/v1/login`, {
       username,
       password,
     });
@@ -111,7 +112,7 @@ export const handleLogin = async (username: string, password: string) => {
 export const fetchLines = async () => {
   const accessToken = localStorage.getItem('accessToken');
   try {
-    const response = await axios.get(`${config.backendUrl}/api/v1/line`, {
+    const response = await axios.get(`${BACKEND_URL}/api/v1/line`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -148,7 +149,7 @@ export const createConversation = async (
 
   try {
     const response = await axios.post(
-      `${config.backendUrl}/api/v1/conversation`,
+      `${BACKEND_URL}/api/v1/conversation`,
       body,
       { headers },
     );

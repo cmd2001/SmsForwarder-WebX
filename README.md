@@ -10,6 +10,8 @@ export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="admin"
 export SECRET_KEY="JWT_SECRET_KEY"
 export TIMEZONE="Asia/Shanghai"
+cd be/src
+python3 debug_entry.py
 ```
 
 ## SMS forwarder config
@@ -27,6 +29,15 @@ export TIMEZONE="Asia/Shanghai"
   "receive_time": "[receive_time]"
   "token": BACKEND_TOKEN
 }
+```
+
+## Frontend config
+
+```sh
+export REACT_APP_BACKEND_URL="http://localhost:5000"
+cd fe
+yarn install
+yarn start
 ```
 
 ## Restful API
