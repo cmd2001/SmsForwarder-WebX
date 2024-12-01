@@ -34,6 +34,7 @@ const MessageList: React.FC = () => {
                 setStart((prevStart) => prevStart + limit);
             } else {
                 setStart(limit);
+                setHasMoreMessages(response.has_next);
             }
         } catch (err) {
             setError('Failed to load messages.');

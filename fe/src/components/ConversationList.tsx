@@ -34,6 +34,7 @@ const ConversationList: React.FC = () => {
                 setStart((prevStart) => prevStart + limit);
             } else {
                 setStart(limit);
+                setHasMoreConversations(response.has_next);
             }
         } catch (err) {
             setError('Failed to load conversations.');
