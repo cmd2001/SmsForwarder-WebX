@@ -30,7 +30,11 @@ const MessageList: React.FC = () => {
             setMessages((prevMessages) =>
                 reset ? [...response.messages].reverse() : [...[...response.messages].reverse(), ...prevMessages]
             );
-            setStart((prevStart) => prevStart + limit);
+            if (!reset) {
+                setStart((prevStart) => prevStart + limit);
+            } else {
+                setStart(limit);
+            }
         } catch (err) {
             setError('Failed to load messages.');
         }

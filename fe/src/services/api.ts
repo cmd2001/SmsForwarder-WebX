@@ -28,7 +28,10 @@ export const fetchConversations = async (
     );
     return response.data;
   } catch (err) {
-    if ((err as any).response.status === 401) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
       redirectToLogin();
     }
     throw err;
@@ -52,7 +55,10 @@ export const fetchMessages = async (
     );
     return response.data;
   } catch (err) {
-    if ((err as any).response.status === 401) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
       redirectToLogin();
     }
     throw err;
@@ -76,7 +82,10 @@ export const sendMessage = async (conversationId: string, content: string) => {
     );
     return response.data;
   } catch (err) {
-    if ((err as any).response.status === 401) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
       redirectToLogin();
     }
     throw err;
@@ -96,5 +105,55 @@ export const handleLogin = async (username: string, password: string) => {
     window.location.href = redirectUrl;
   } catch (err) {
     throw err;
+  }
+};
+
+export const fetchLines = async () => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(`${config.backendUrl}/api/v1/line`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
+    throw new Error('Failed to load available lines.');
+  }
+};
+
+// Create a new conversation (POST /api/conversation)
+export const createConversation = async (
+  line: string,
+  number: number | string,
+  content: string,
+) => {
+  const accessToken = localStorage.getItem('accessToken');
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  const body = {
+    line_id: line,
+    peer_number: number,
+    content,
+  };
+
+  try {
+    const response = await axios.post(
+      `${config.backendUrl}/api/v1/conversation`,
+      body,
+      { headers },
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error('Error creating conversation.');
   }
 };

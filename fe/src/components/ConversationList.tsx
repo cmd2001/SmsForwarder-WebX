@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, List, ListItem, ListItemText, Button } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Button, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { fetchConversations } from '../services/api';
 
 interface Conversation {
@@ -17,7 +18,7 @@ const ConversationList: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [start, setStart] = useState(0);
     const [hasMoreConversations, setHasMoreConversations] = useState(true);
-    const limit = 10;
+    const limit = 2;
     const navigate = useNavigate();
 
     const loadConversations = async (reset: boolean = false) => {
@@ -29,7 +30,11 @@ const ConversationList: React.FC = () => {
             setConversations((prevConversations) =>
                 reset ? response.conversations : [...prevConversations, ...response.conversations]
             );
-            setStart((prevStart) => prevStart + limit);
+            if (!reset) {
+                setStart((prevStart) => prevStart + limit);
+            } else {
+                setStart(limit);
+            }
         } catch (err) {
             setError('Failed to load conversations.');
         }
@@ -50,9 +55,18 @@ const ConversationList: React.FC = () => {
         navigate(`/conversation/${conversationId}`);
     };
 
+    const handleNewConversation = () => {
+        navigate('/new');
+    };
+
     return (
-        <Box p={3}>
-            <Typography variant="h5">Conversations</Typography>
+        <Box p={3} position="relative">
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="h5">Conversations</Typography>
+                <IconButton color="primary" onClick={handleNewConversation}>
+                    <AddIcon />
+                </IconButton>
+            </Box>
             {error && (
                 <Typography color="error" variant="body2">
                     {error}
