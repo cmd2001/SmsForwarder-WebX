@@ -59,6 +59,7 @@ class Conversation_API(Resource):
         except Exception as e:
             db.session.rollback()
             return {'message': str(e)}, 500
+
     @jwt_required()
     def post(self):
         parser = reqparse.RequestParser()
@@ -115,6 +116,7 @@ class Conversation_API(Resource):
             )
             db.session.add(message)
             db.session.flush()
+            conversation.last_message_id = message.id
         except Exception as e:
             db.session.rollback()
             return {'message': str(e)}, 500
@@ -135,6 +137,7 @@ class Conversation_API(Resource):
             message.status = MessageStatus.SENT
             db.session.commit()
             return {
+                'conversation_id': conversation.id,
                 'display_time': message.display_time.astimezone(config['TIMEZONE']).strftime('%Y-%m-%d %H:%M:%S'),
                 'content': message.content,
                 'type': message.message_type.value,

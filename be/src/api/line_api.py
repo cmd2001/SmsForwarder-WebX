@@ -13,7 +13,10 @@ class Line_API(Resource):
     @jwt_required()
     def get(self):
         line_id = request.args.get('id', type=int)
-        line = Line.query.filter_by(id=line_id).first()
-        if not line:
-            return {'message': 'Line not found'}, 404
-        return line.to_json(), 200
+        if line_id:
+            line = Line.query.filter_by(id=line_id).first()
+            if not line:
+                return {'message': 'Line not found'}, 404
+            return line.to_json(), 200
+        lines = Line.query.all()
+        return [line.to_json() for line in lines], 200
