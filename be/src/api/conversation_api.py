@@ -63,13 +63,13 @@ class Conversation_API(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('line_id', type=int, required=False,
-                            help='line_id and peer_number or conversation_id', location='form')
+                            help='line_id and peer_number or conversation_id', location='json')
         parser.add_argument('peer_number', type=str, required=False,
-                            help='line_id and peer_number or conversation_id', location='form')
+                            help='line_id and peer_number or conversation_id', location='json')
         parser.add_argument('conversation_id', type=int, required=False,
-                            help='line_id and peer_number or conversation_id', location='form')
+                            help='line_id and peer_number or conversation_id', location='json')
         parser.add_argument('content', type=str, required=True,
-                            help='content is required', location='form')
+                            help='content is required', location='json')
         args = parser.parse_args()
         line_id = args['line_id']
         peer_number = args['peer_number']
@@ -134,7 +134,12 @@ class Conversation_API(Resource):
                 raise Exception(res.text)
             message.status = MessageStatus.SENT
             db.session.commit()
-            return {'message': 'success'}, 200
+            return {
+                'display_time': message.display_time.astimezone(config['TIMEZONE']).strftime('%Y-%m-%d %H:%M:%S'),
+                'content': message.content,
+                'type': message.message_type.value,
+                'status': message.status.value,
+            }, 200
         except Exception as e:
             message.status = MessageStatus.ERROR
             db.session.commit()

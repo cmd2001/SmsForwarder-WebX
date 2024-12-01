@@ -13,9 +13,9 @@ class User_API(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('username', type=str, required=True,
-                            help='username is required', location='form')
+                            help='username is required', location='json')
         parser.add_argument('password', type=str, required=False,
-                            help='password is required', location='form')
+                            help='password is required', location='json')
         args = parser.parse_args()
         username, password = args['username'], args['password']
 
