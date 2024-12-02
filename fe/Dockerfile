@@ -8,4 +8,4 @@ ADD . /app
 ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
 RUN yarn build
 
-CMD ["yarn", "http-server", "build"]
+CMD ["yarn", "serve", "-s", "build"]
