@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, List, ListItem, ListItemText, Button, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Button, IconButton, ListItemButton, Fab, Toolbar, AppBar, CssBaseline } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { fetchConversations } from '../services/api';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { handleLogout, fetchConversations } from '../services/api';
+import { parseTime } from '../services/utils';
 
 interface Conversation {
     conversation_id: number;
@@ -61,41 +63,67 @@ const ConversationList: React.FC = () => {
     };
 
     return (
-        <Box p={3} position="relative">
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h5">Conversations</Typography>
-                <IconButton color="primary" onClick={handleNewConversation}>
-                    <AddIcon />
-                </IconButton>
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar>
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Conversations
+                    </Typography>
+                    <IconButton size="large" aria-label="new" color="inherit" onClick={handleNewConversation}>
+                        <AddIcon />
+                    </IconButton>
+                    <IconButton size="large" aria-label="logout" color="inherit" onClick={handleLogout}>
+                        <LogoutIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Box component="main" sx={{ p: 3 }} className='box-main'>
+                <Toolbar />
+                {error && (
+                    <Typography color="error" variant="body2" align="center">
+                        {error}
+                    </Typography>
+                )}
+                <List sx={{ mb: 2 }}>
+                    {conversations.map((conversation) => (
+                        <ListItem key={conversation.conversation_id}>
+                            <ListItemButton onClick={() => handleConversationClick(conversation.conversation_id)}>
+                                <ListItemText
+                                    primary={
+                                        <Box display="flex" justifyContent="space-between">
+                                            <Typography variant="body1" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                                {conversation.peer_number} via {conversation.via_line_number}
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                                {parseTime(conversation.last_message_time)}
+                                            </Typography>
+                                        </Box>
+                                    }
+                                    secondary={
+                                        <span style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                            {conversation.last_message_content}
+                                        </span>
+                                    }
+                                />
+                            </ListItemButton>
+
+                        </ListItem>
+                    ))}
+                </List>
+                {hasMoreConversations ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                        <Button variant="contained" onClick={handleLoadMoreConversations} sx={{ marginTop: '10px', alignSelf: 'center' }}>
+                            Load More Conversations
+                        </Button>
+                    </Box>
+                ) : (
+                    <Typography variant="body2" color="textSecondary" align="center" mt={2}>
+                        No more conversations
+                    </Typography>
+                )}
             </Box>
-            {error && (
-                <Typography color="error" variant="body2">
-                    {error}
-                </Typography>
-            )}
-            <List>
-                {conversations.map((conversation) => (
-                    <ListItem key={conversation.conversation_id} onClick={() => handleConversationClick(conversation.conversation_id)}>
-                        <ListItemText
-                            primary={`${conversation.peer_number} via ${conversation.via_line_number}, ${conversation.last_message_time}`}
-                            secondary={
-                                <span style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
-                                    {conversation.last_message_content}
-                                </span>
-                            }
-                        />
-                    </ListItem>
-                ))}
-            </List>
-            {hasMoreConversations ? (
-                <Button variant="contained" onClick={handleLoadMoreConversations} sx={{ marginTop: '10px', alignSelf: 'center' }}>
-                    Load More Conversations
-                </Button>
-            ) : (
-                <Typography variant="body2" color="textSecondary" align="center" mt={2}>
-                    No more conversations
-                </Typography>
-            )}
+
         </Box>
     );
 };

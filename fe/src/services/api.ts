@@ -1,9 +1,13 @@
 import axios from 'axios';
-import { redirect } from 'react-router';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const cleanToken = () => {
   localStorage.removeItem('accessToken');
+};
+
+export const handleLogout = () => {
+  cleanToken();
+  window.location.href = '/';
 };
 
 export const redirectToLogin = () => {

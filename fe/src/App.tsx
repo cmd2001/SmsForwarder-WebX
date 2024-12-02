@@ -4,6 +4,7 @@ import Login from './components/Login';
 import ConversationList from './components/ConversationList';
 import MessageList from './components/MessageList';
 import NewConversation from './components/NewConversation';
+import './styles/App.css';
 
 const App: React.FC = () => {
   return (

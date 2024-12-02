@@ -1,0 +1,30 @@
+.box-main {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+}
+
+.MuiAppBar-root {
+  background-color: #f48fb1 !important;
+}
+
+.MuiButton-colorPrimary {
+  background-color: #f48fb1 !important;
+}
+
+label.Mui-focused {
+  color: #f48fb1 !important;
+}
+.MuiInput-underline:after {
+  border-bottom-color: #f48fb1 !important;
+}
+.MuiFilledInput-underline:after {
+  border-bottom-color: #f48fb1 !important;
+}
+.MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #f48fb1 !important;
+}
+
+.MuiCardHeader-content {
+  text-align: center !important;
+}

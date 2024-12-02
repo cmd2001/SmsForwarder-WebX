@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Typography, IconButton } from '@mui/material';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Box, Typography, IconButton, CssBaseline, AppBar, Toolbar, Paper } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { fetchLines, createConversation } from '../services/api';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { fetchLines, createConversation, handleLogout } from '../services/api';
 
 
 interface Line {
@@ -53,56 +54,67 @@ const NewConversation: React.FC = () => {
     };
 
     return (
-        <Box p={3} position="relative" display="flex" flexDirection="column" height="100vh">
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <TextField
-                    label="Peer Number"
-                    type="number"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
-                    fullWidth
-                    sx={{ marginRight: '10px' }}
-                />
-                <FormControl fullWidth>
-                    <InputLabel id="line-label">Line</InputLabel>
-                    <Select
-                        labelId="line-label"
-                        value={selectedLine}
-                        onChange={(e) => setSelectedLine(e.target.value)}
-                        label="Line"
-                    >
-                        {lines.map((line, index) => (
-                            <MenuItem key={index} value={line.id}>
-                                {line.number}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar>
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        New Conversation
+                    </Typography>
+                    <IconButton size="large" aria-label="logout" color="inherit" onClick={handleLogout}>
+                        <LogoutIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Box component="main" sx={{ p: 3 }} className='box-main'>
+                <Toolbar />
+                {error && (
+                    <Typography color="error" variant="body2" align="center">
+                        {error}
+                    </Typography>
+                )}
+                <Box sx={{ display: 'flex' }} style={{ width: "100%" }}>
+                    <TextField
+                        label="Peer Number"
+                        type="number"
+                        value={number}
+                        onChange={(e) => setNumber(e.target.value)}
+                        sx={{ marginRight: '10px' }}
+                        fullWidth
+                    />
+                    <FormControl sx={{ minWidth: '150px' }}>
+                        <InputLabel id="line-label">Line</InputLabel>
+                        <Select
+                            labelId="line-label"
+                            value={selectedLine}
+                            onChange={(e) => setSelectedLine(e.target.value)}
+                            label="Line"
+                        >
+                            {lines.map((line, index) => (
+                                <MenuItem key={index} value={line.id}>
+                                    {line.number}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
             </Box>
-
-            <Box display="flex" alignItems="center" mt="auto" mb={2}>
+            <Paper
+                component="form"
+                sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%' }}
+            >
                 <TextField
-                    label="Content"
-                    fullWidth
+                    sx={{ ml: 1, flex: 1 }}
+                    label="Type a message"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    margin="normal"
                     multiline
                     maxRows={4}
-                    sx={{ flexGrow: 1, marginRight: '10px' }}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    sx={{ minWidth: '56px', height: '56px' }}
-                >
+                <IconButton type="button" sx={{ p: '10px' }} onClick={handleSubmit}>
                     <SendIcon />
-                </Button>
-            </Box>
-
-
+                </IconButton>
+            </Paper>
         </Box>
     );
 };
