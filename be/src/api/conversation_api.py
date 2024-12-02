@@ -123,17 +123,18 @@ class Conversation_API(Resource):
 
         # now call the message sending API
         try:
-            res = requests.post(config["SEND_API_SCHEME"].format(line.endpoint), json={
-                'data': {
-                    'sim_slot': line.sim_slot,
-                    'phone_numbers': conversation.peer_number,
-                    'msg_content': message.content
-                },
-                'timestamp': int(datetime.now().timestamp() * 1000),
-                'sign': ''
-            })
-            if res.status_code != 200:
-                raise Exception(res.text)
+            if not config["DEBUG"]:
+                res = requests.post(config["SEND_API_SCHEME"].format(line.endpoint), json={
+                    'data': {
+                        'sim_slot': line.sim_slot,
+                        'phone_numbers': conversation.peer_number,
+                        'msg_content': message.content
+                    },
+                    'timestamp': int(datetime.now().timestamp() * 1000),
+                    'sign': ''
+                })
+                if res.status_code != 200:
+                    raise Exception(res.text)
             message.status = MessageStatus.SENT
             db.session.commit()
             return {

@@ -32,6 +32,7 @@ def create_app():
     config["ADMIN_PASSWORD"] = os.environ.get("ADMIN_PASSWORD")
     config["TIMEZONE"] = pytz.timezone(os.environ.get("TIMEZONE"))
     config["SEND_API_SCHEME"] = os.environ.get("SEND_API_SCHEME")
+    config["DEBUG"] = os.environ.get("DEBUG") == "True"
 
     global db
     db.init_app(app)

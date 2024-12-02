@@ -10,6 +10,7 @@ export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="admin"
 export SECRET_KEY="JWT_SECRET_KEY"
 export TIMEZONE="Asia/Shanghai"
+export DEBUG="True" # for debug, which will block sending real SMS
 cd be/src
 python3 debug_entry.py
 ```
@@ -34,7 +35,7 @@ python3 debug_entry.py
 ## Frontend config
 
 ```sh
-export REACT_APP_BACKEND_URL="http://localhost:5000"
+export REACT_APP_BACKEND_URL="http://localhost:8000"
 cd fe
 yarn install
 yarn start
