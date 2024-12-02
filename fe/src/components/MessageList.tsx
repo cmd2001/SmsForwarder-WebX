@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, List, ListItem, TextField, Button, CssBaseline, AppBar, Toolbar, Paper, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, TextField, Button, CssBaseline, AppBar, Toolbar, Paper, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { handleLogout, fetchMessages, sendMessage } from '../services/api';
+import { handleLogout, fetchMessages, sendMessage, deleteConversation } from '../services/api';
 import { parseTime } from '../services/utils';
 import { pink, grey } from '@mui/material/colors';
 
@@ -24,6 +25,7 @@ const MessageList: React.FC = () => {
     const [peerNumber, setPeerNumber] = useState<string | null>(null);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [start, setStart] = useState(0);
+    const [open, setOpen] = useState(false);
     const listRef = useRef<HTMLUListElement>(null);
     const limit = 10;
 
@@ -57,6 +59,7 @@ const MessageList: React.FC = () => {
         loadMessages(true);
         setLineNumber(null);
         setPeerNumber(null);
+        setOpen(false);
     }, [conversationId]);
 
     const handleLoadMoreMessages = () => {
@@ -93,6 +96,9 @@ const MessageList: React.FC = () => {
                     </Typography>
                     <IconButton size="large" aria-label="logout" color="inherit" onClick={handleLogout}>
                         <LogoutIcon />
+                    </IconButton>
+                    <IconButton size="large" aria-label="logout" color="inherit" onClick={() => { setOpen(true); }}>
+                        <DeleteIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -158,6 +164,37 @@ const MessageList: React.FC = () => {
                         <SendIcon />
                     </IconButton>
                 </Paper>
+                <Dialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        Delete {peerNumber} via {lineNumber}?
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Are you sure to delete this conversation?
+                            <Typography color="error">THIS CANNOT BE UNDONE</Typography>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="contained" onClick={() => setOpen(false)}>NO</Button>
+                        <Button variant="contained" onClick={
+                            () => {
+                                deleteConversation(conversationId as string).then(() => {
+                                    window.location.href = '/';
+                                }).catch(() => {
+                                    setOpen(false);
+                                    setError('Failed to delete conversation.');
+                                });
+                            }
+                        } autoFocus>
+                            YES
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </Box>
     );

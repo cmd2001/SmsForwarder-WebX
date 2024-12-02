@@ -61,6 +61,29 @@ class Conversation_API(Resource):
             return {'message': str(e)}, 500
 
     @jwt_required()
+    def delete(self):
+        conversation_id = request.args.get('id', None, type=int)
+        if not conversation_id:
+            return {
+                'error': 'conversation_id is required'
+            }, 400
+        conversation = Conversation.query.get(conversation_id)
+        if not conversation:
+            return {
+                'error': 'conversation not found'
+            }, 404
+        try:
+            Message.query.filter_by(conversation_id=conversation_id).delete()
+            db.session.delete(conversation)
+            db.session.commit()
+            return {
+                'message': 'delete success'
+            }, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'message': str(e)}, 500
+
+    @jwt_required()
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('line_id', type=int, required=False,

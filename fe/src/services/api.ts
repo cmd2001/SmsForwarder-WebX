@@ -159,6 +159,35 @@ export const createConversation = async (
     );
     return response.data;
   } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
     throw new Error('Error creating conversation.');
+  }
+};
+
+export const deleteConversation = async (conversationId: string) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.delete(
+      `${BACKEND_URL}/api/v1/conversation?id=${conversationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
+    throw new Error('Error deleting conversation.');
   }
 };
