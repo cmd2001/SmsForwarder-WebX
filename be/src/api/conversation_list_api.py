@@ -22,7 +22,7 @@ class Conversation_List_API(Resource):
         # conversations = Conversation.query.order_by(
         #     Conversation.last_message.display_time.desc()).offset(start).limit(limit + 1).all()
         conversations = Conversation.query.order_by(
-            Conversation.last_message_id).offset(start).limit(limit + 1).all()
+            Conversation.last_message_id.desc()).offset(start).limit(limit + 1).all()
         has_next = len(conversations) > limit
         conversations = conversations[:limit]
         ret = []
