@@ -15,7 +15,7 @@ class Line(db.Model):
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     number = Column(String(255), nullable=False, unique=True)
-    sim_slot = Column(Enum('1', '2'), nullable=False)
+    sim_slot = Column(Integer, nullable=False)
     # The `device_mark` field in the `Line` class represents a string attribute that stores the mark
     # or identifier of the device associated with the line. It is a required field (nullable=False)
     # and has a maximum length of 255 characters. This field is used to uniquely identify the device

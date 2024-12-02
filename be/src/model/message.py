@@ -34,10 +34,11 @@ class Message(db.Model):
     line_id: Mapped[int] = mapped_column(ForeignKey("line.id"), nullable=False)
     line: Mapped["Line"] = relationship()
 
-    conversation_id: Mapped[int] = mapped_column(
-        ForeignKey("conversation.id"), nullable=False)
-    conversation: Mapped["Conversation"] = relationship(
-        "Conversation", foreign_keys='Message.conversation_id')
+    # conversation_id: Mapped[int] = mapped_column(
+    #     ForeignKey("conversation.id"), nullable=False)
+    # conversation: Mapped["Conversation"] = relationship(
+    #     "Conversation", foreign_keys='Message.conversation_id')
+    conversation_id = Column(Integer, nullable=False)
 
     message_type = Column(Enum(MessageType), nullable=False)
     status = Column(Enum(MessageStatus), nullable=False)
