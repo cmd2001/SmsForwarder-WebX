@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, List, ListItem, ListItemText, Button, IconButton, ListItemButton, Fab, Toolbar, AppBar, CssBaseline } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Button, IconButton, ListItemButton, Fab, Toolbar, AppBar, CssBaseline, BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MessageIcon from '@mui/icons-material/Message';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { handleLogout, fetchConversations } from '../services/api';
 import { parseTime } from '../services/utils';
 
@@ -19,6 +21,7 @@ const ConversationList: React.FC = () => {
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [start, setStart] = useState(0);
+    const [navi, setNavi] = useState(1);
     const [hasMoreConversations, setHasMoreConversations] = useState(true);
     const limit = 2;
     const navigate = useNavigate();
@@ -59,7 +62,7 @@ const ConversationList: React.FC = () => {
     };
 
     const handleNewConversation = () => {
-        navigate('/new');
+        navigate('/conversation/new');
     };
 
     return (
@@ -87,28 +90,25 @@ const ConversationList: React.FC = () => {
                 )}
                 <List sx={{ mb: 2 }}>
                     {conversations.map((conversation) => (
-                        <ListItem key={conversation.conversation_id}>
-                            <ListItemButton onClick={() => handleConversationClick(conversation.conversation_id)}>
-                                <ListItemText
-                                    primary={
-                                        <Box display="flex" justifyContent="space-between">
-                                            <Typography variant="body1" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
-                                                {conversation.peer_number} via {conversation.via_line_number}
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
-                                                {parseTime(conversation.last_message_time)}
-                                            </Typography>
-                                        </Box>
-                                    }
-                                    secondary={
-                                        <span style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
-                                            {conversation.last_message_content}
-                                        </span>
-                                    }
-                                />
-                            </ListItemButton>
-
-                        </ListItem>
+                        <ListItemButton key={conversation.conversation_id} onClick={() => handleConversationClick(conversation.conversation_id)}>
+                            <ListItemText
+                                primary={
+                                    <Box display="flex" justifyContent="space-between">
+                                        <Typography variant="body1" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                            {conversation.peer_number} via {conversation.via_line_number}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary" style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                            {parseTime(conversation.last_message_time)}
+                                        </Typography>
+                                    </Box>
+                                }
+                                secondary={
+                                    <span style={{ fontWeight: conversation.last_message_is_unread ? 'bold' : 'normal' }}>
+                                        {conversation.last_message_content}
+                                    </span>
+                                }
+                            />
+                        </ListItemButton>
                     ))}
                 </List>
                 {hasMoreConversations ? (
@@ -123,7 +123,24 @@ const ConversationList: React.FC = () => {
                     </Typography>
                 )}
             </Box>
-
+            <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                <BottomNavigation
+                    showLabels
+                    value={navi}
+                    onChange={(event, newValue) => {
+                        setNavi(newValue);
+                        if (newValue === 0) {
+                            navigate('/line');
+                        }
+                        if (newValue === 1) {
+                            navigate('/');
+                        }
+                    }}
+                >
+                    <BottomNavigationAction label="Lines" icon={<PhoneIcon />} />
+                    <BottomNavigationAction label="Conversations" icon={<MessageIcon />} />
+                </BottomNavigation>
+            </Paper>
         </Box>
     );
 };

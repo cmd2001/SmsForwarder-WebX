@@ -1,7 +1,10 @@
 .box-main {
   width: 100%;
   max-width: 800px;
-  margin: auto;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
 }
 
 .MuiAppBar-root {
@@ -27,4 +30,7 @@ label.Mui-focused {
 
 .MuiCardHeader-content {
   text-align: center !important;
+}
+.MuiBottomNavigationAction-root.Mui-selected {
+  color: #f48fb1 !important;
 }
