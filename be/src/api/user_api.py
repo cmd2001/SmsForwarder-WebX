@@ -4,11 +4,12 @@
 @File: user_api.py
 """
 
-from flask_restful import Resource, reqparse
-from app import config
+from flask_restx import Resource, reqparse
+from app import api, config
 from flask_jwt_extended import create_access_token
 
 
+@api.route('/api/v1/login')
 class User_API(Resource):
     def post(self):
         parser = reqparse.RequestParser()

@@ -6,25 +6,32 @@
 
 from datetime import datetime
 from flask_jwt_extended import jwt_required
-import pytz
 
 from datetime import datetime
 import pytz
 
-from flask_restful import Resource, request, reqparse
-from app import db, config
+from flask_restx import Resource, reqparse
+from app import api, db, config
 from model.conversation import Conversation
 from model.line import Line
 from model.message import Message, MessageStatus, MessageType
 import requests
 
 
+@api.route('/api/v1/conversation')
 class Conversation_API(Resource):
     @jwt_required()
     def get(self):
-        conversation_id = request.args.get('id', None, type=int)
-        start = request.args.get('start', 0, type=int)
-        limit = request.args.get('limit', 10, type=int)
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int, required=False,
+                            help='conversation_id is required', location='args')
+        parser.add_argument('start', type=int, required=False,
+                            help='start is required', location='args')
+        parser.add_argument('limit', type=int, required=False,
+                            help='limit is required', location='args')
+        args = parser.parse_args()
+        conversation_id, start, limit = args.get(
+            'id'), args.get('start'), args.get('limit')
 
         if not conversation_id:
             return {

@@ -7,13 +7,15 @@
 from datetime import datetime
 import pytz
 
-from flask_restful import Resource, reqparse, request
-from app import db, config
+from flask import request
+from flask_restx import Resource, reqparse
+from app import api, db, config
 from model.conversation import Conversation
 from model.line import Line
 from model.message import Message, MessageType, MessageStatus
 
 
+@api.route('/api/v1/message')
 class Message_API(Resource):
     def post(self):  # this api is defined to be used in intra-service communication, so it is only protected by a plain token
         parser = reqparse.RequestParser()

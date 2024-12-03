@@ -5,22 +5,26 @@
 """
 
 from flask_jwt_extended import jwt_required
-import pytz
 
 
-from flask_restful import Resource, request
-from app import config
+from flask_restx import Resource, reqparse
+from app import api, config
 from model.conversation import Conversation
 from model.message import MessageStatus
 
 
+@api.route('/api/v1/conversation/list')
 class Conversation_List_API(Resource):
     @jwt_required()
     def get(self):
-        start = request.args.get('start', 0, type=int)
-        limit = request.args.get('limit', 10, type=int)
-        # conversations = Conversation.query.order_by(
-        #     Conversation.last_message.display_time.desc()).offset(start).limit(limit + 1).all()
+        parser = reqparse.RequestParser()
+        parser.add_argument('start', type=int, required=False,
+                            help='start is required', location='args')
+        parser.add_argument('limit', type=int, required=False,
+                            help='limit is required', location='args')
+        args = parser.parse_args()
+        start, limit = args.get('start'), args.get('limit')
+
         conversations = Conversation.query.order_by(
             Conversation.last_message_id.desc()).offset(start).limit(limit + 1).all()
         has_next = len(conversations) > limit

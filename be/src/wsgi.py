@@ -5,11 +5,8 @@
 """
 
 from app import create_app
-from register_api import register_api
-
 
 app, api = create_app()
-register_api(api)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
