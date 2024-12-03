@@ -4,7 +4,9 @@ import App from './App';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 // import './App.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement,
+);
 const theme = createTheme();
 root.render(
   <ThemeProvider theme={theme}>
@@ -12,5 +14,5 @@ root.render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
-  </ThemeProvider>
+  </ThemeProvider>,
 );

@@ -6,6 +6,7 @@ import MessageList from './components/MessageList';
 import NewConversation from './components/NewConversation';
 import LineList from './components/LineList';
 import './styles/App.css';
+import LineComponent from './components/Line';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Route path="/" element={<ConversationList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/line" element={<LineList />} />
+        <Route path="/line/:lineId" element={<LineComponent />} />
         <Route path="/conversation/new" element={<NewConversation />} />
         <Route path="/conversation/:conversationId" element={<MessageList />} />
       </Routes>

@@ -43,6 +43,36 @@ export const fetchConversations = async (
   }
 };
 
+export const editLine = async (
+  lineId: string,
+  attribute: string,
+  value: string,
+) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.put(
+      `${BACKEND_URL}/api/v1/line?id=${lineId}`,
+      {
+        [attribute]: value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
+    throw new Error('Error editing line.');
+  }
+};
+
 export const fetchMessages = async (
   conversationId: string,
   start: number,
@@ -130,6 +160,52 @@ export const fetchLines = async () => {
       redirectToLogin();
     }
     throw new Error('Failed to load available lines.');
+  }
+};
+
+export const fetchLine = async (lineId: string) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.get(
+      `${BACKEND_URL}/api/v1/line?id=${lineId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
+    throw new Error('Failed to load available lines.');
+  }
+};
+
+export const deleteLine = async (lineId: string) => {
+  const accessToken = localStorage.getItem('accessToken');
+  try {
+    const response = await axios.delete(
+      `${BACKEND_URL}/api/v1/line?id=${lineId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    if (
+      (err as any).response.status === 401 ||
+      (err as any).response.status === 422
+    ) {
+      redirectToLogin();
+    }
+    throw new Error('Error deleting line.');
   }
 };
 

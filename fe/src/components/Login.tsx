@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { AppBar, Box, Button, Card, CardContent, CardHeader, CssBaseline, TextField, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CssBaseline,
+  TextField,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { handleLogin } from '../services/api';
 
 const Login: React.FC = () => {
@@ -17,16 +28,18 @@ const Login: React.FC = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box component="main" sx={{ p: 3 }} className='box-main'>
+      <Box component="main" sx={{ p: 3 }} className="box-main">
         <Toolbar />
         {error && (
           <Typography color="error" variant="body2" align="center">
             {error}
           </Typography>
         )}
-        <Card variant="outlined" sx={{ minWidth: 275, maxWidth: "80%", margin: 'auto' }}>
-          <CardHeader title="Login" sx={{ margin: 'auto' }}>
-          </CardHeader>
+        <Card
+          variant="outlined"
+          sx={{ minWidth: 275, maxWidth: '80%', margin: 'auto', mt: 6 }}
+        >
+          <CardHeader title="Login" sx={{ margin: 'auto' }}></CardHeader>
           <CardContent>
             <TextField
               label="Username"
@@ -45,14 +58,18 @@ const Login: React.FC = () => {
               margin="normal"
               fullWidth
             />
-            <Button variant="contained" color="primary" onClick={async () => {
-              try {
-                await handleLogin(username, password);
-              } catch (err) {
-                setError('Failed to login, please check your credentials.');
-              }
-            }
-            } fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={async () => {
+                try {
+                  await handleLogin(username, password);
+                } catch (err) {
+                  setError('Failed to login, please check your credentials.');
+                }
+              }}
+              fullWidth
+            >
               Login
             </Button>
           </CardContent>

@@ -1,12 +1,16 @@
 .box-main {
   width: 100%;
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
   outline: 0 !important;
 }
 
+.listItem-padding {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
 .MuiAppBar-root {
   background-color: #f48fb1 !important;
 }
@@ -33,4 +37,7 @@ label.Mui-focused {
 }
 .MuiBottomNavigationAction-root.Mui-selected {
   color: #f48fb1 !important;
+}
+.MuiListItem-root {
+  padding: 0 !important;
 }
