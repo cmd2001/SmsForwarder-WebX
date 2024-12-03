@@ -71,7 +71,11 @@ const LineList: React.FC = () => {
             {error}
           </Typography>
         )}
-        <List>
+        <List sx={{
+          pl: 0,
+          pr: 0,
+          pb: 7,
+        }}>
           {lines.map((line) => (
             <ListItem key={line.id}>
               <ListItemButton

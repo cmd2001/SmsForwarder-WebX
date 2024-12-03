@@ -36,6 +36,7 @@ const ConversationList: React.FC = () => {
   const navigate = useNavigate();
 
   const loadConversations = async (page: number, reset: boolean = false) => {
+    if (start === 0 && !reset) return;
     try {
       const response = await fetchConversations(start, limit);
       if (response.conversations.length < limit) {
@@ -107,7 +108,11 @@ const ConversationList: React.FC = () => {
           hasMore={hasMoreConversations}
           initialLoad={false}
         >
-          <List sx={{ mb: 2 }}>
+          <List sx={{
+            pl: 0,
+            pr: 0,
+            pb: 7,
+          }}>
             {conversations.map((conversation) => (
               <ListItem
                 key={conversation.conversation_id}>

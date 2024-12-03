@@ -42,25 +42,25 @@ const MessageList: React.FC = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [start, setStart] = useState(0);
   const [open, setOpen] = useState(false);
-  const limit = 15;
+  const limit = 10;
 
   const loadMessages = async (page: number, reset: boolean = false) => {
     if (!conversationId) return;
+    if (start === 0 && !reset) return;
     try {
       const response = await fetchMessages(conversationId, start, limit);
-      if (response.messages.length < limit) {
-        setHasMoreMessages(false);
-      }
+      setHasMoreMessages(response.has_next);
       if (reset) {
-        setMessages([...[...response.messages].reverse()]);
+        setMessages(response.messages);
         setStart(limit);
         setLineNumber(response.via_line_number);
         setPeerNumber(response.peer_number);
-        window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight / 2);
         return;
+      } else {
+        setMessages((prevMessages) => [...prevMessages, ...response.messages]);
+        setStart(start + limit);
       }
-      setMessages((prevMessages) => [...[...response.messages].reverse(), ...prevMessages]);
-      setStart(start + limit);
     } catch (err) {
       setError('Failed to load messages.');
     }
@@ -142,11 +142,14 @@ const MessageList: React.FC = () => {
           hasMore={hasMoreMessages}
           isReverse
           initialLoad={false}
+          threshold={500}
         >
           <List
             sx={{
               flexGrow: 1,
-              padding: 0,
+              pl: 2,
+              pr: 2,
+              pb: 7,
               display: 'flex',
               flexDirection: 'column-reverse',
             }}

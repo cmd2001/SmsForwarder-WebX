@@ -15,7 +15,7 @@
   ],
   "id": "smsfwder-webx-panel",
   "start_url": "/",
-  "display": "fullscreen",
+  "display": "standalone",
   "scope": "/",
   "description": "Control your SMS Forwarder from your browser"
 }
