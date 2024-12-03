@@ -31,14 +31,9 @@ class Message(db.Model):
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
-    line_id: Mapped[int] = mapped_column(ForeignKey("line.id"), nullable=False)
-    line: Mapped["Line"] = relationship()
-
-    # conversation_id: Mapped[int] = mapped_column(
-    #     ForeignKey("conversation.id"), nullable=False)
-    # conversation: Mapped["Conversation"] = relationship(
-    #     "Conversation", foreign_keys='Message.conversation_id')
-    conversation_id = Column(Integer, nullable=False)
+    conversation_id: Mapped[int] = mapped_column(
+        ForeignKey("conversation.id", ondelete="CASCADE"), nullable=False)
+    conversation: Mapped["Conversation"] = relationship()
 
     message_type = Column(Enum(MessageType), nullable=False)
     status = Column(Enum(MessageStatus), nullable=False)

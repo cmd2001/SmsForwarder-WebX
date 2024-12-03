@@ -41,7 +41,7 @@ class Message_API(Resource):
 
         sim_slot = args['card_slot'].split('_')[0][-1]
         line_number = args['card_slot'].split('_')[-1]
-
+        print('xxx')
         try:
             line = Line.query.filter_by(number=line_number).first()
             if not line:
@@ -65,7 +65,6 @@ class Message_API(Resource):
                 db.session.flush()
 
             message = Message(
-                line_id=line.id,
                 conversation_id=conversation.id,
                 message_type=MessageType.IN,
                 status=MessageStatus.RECEIVED,
@@ -75,7 +74,7 @@ class Message_API(Resource):
             )
             db.session.add(message)
             db.session.flush()
-            conversation.last_message = message
+            conversation.last_message_id = message.id
 
             db.session.commit()
             return {'message': 'success'}, 200

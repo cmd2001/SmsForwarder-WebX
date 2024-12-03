@@ -18,16 +18,18 @@ class Conversation(db.Model):
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
-    line_id: Mapped[int] = mapped_column(ForeignKey("line.id"), nullable=False)
+    line_id: Mapped[int] = mapped_column(ForeignKey(
+        "line.id", ondelete="CASCADE"), nullable=False)
     line: Mapped["Line"] = relationship()
 
     peer_number = Column(String(255), nullable=False)
-    # to find conversation with latest message
 
-    last_message_id: Mapped[int] = mapped_column(
-        ForeignKey("message.id"), nullable=True)
-    last_message: Mapped["Message"] = relationship(
-        "Message", foreign_keys='Conversation.last_message_id')
+    messages = relationship(
+        "Message",
+        back_populates="conversation",
+        cascade="all, delete",
+    )
+    last_message_id = Column(Integer, nullable=True)
 
     def __repr__(self):
         return "<Conversation(id='%s', peer_number='%s', line_id='%s')>" % (

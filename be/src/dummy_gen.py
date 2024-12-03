@@ -34,7 +34,7 @@ with app.app_context():
                 # YY-MM-DD HH:MM:SS
                 display_time = datetime.datetime.now() - datetime.timedelta(seconds=60 * (20-k))
                 message = Message(
-                    line_id=i, conversation_id=conversation.id, message_type=message_type, status=status, content=f"content_{i}_{j}_{k}", display_time=display_time)
+                    conversation_id=conversation.id, message_type=message_type, status=status, content=f"content_{i}_{j}_{k}", display_time=display_time)
                 db.session.add(message)
                 db.session.flush()
                 conversation.last_message_id = message.id

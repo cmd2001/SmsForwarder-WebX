@@ -6,6 +6,7 @@
 
 from app import db
 from sqlalchemy import Column, DateTime, Integer, String, Enum, func
+from sqlalchemy.orm import relationship
 
 
 class Line(db.Model):
@@ -16,13 +17,14 @@ class Line(db.Model):
 
     number = Column(String(255), nullable=False, unique=True)
     sim_slot = Column(Integer, nullable=False)
-    # The `device_mark` field in the `Line` class represents a string attribute that stores the mark
-    # or identifier of the device associated with the line. It is a required field (nullable=False)
-    # and has a maximum length of 255 characters. This field is used to uniquely identify the device
-    # linked to the specific line in the database.
     device_mark = Column(String(255), nullable=False)
     # send api endpoint for device
     endpoint = Column(String(255), nullable=False)
+    conversations = relationship(
+        "Conversation",
+        back_populates="line",
+        cascade="all, delete",
+    )
 
     def __repr__(self):
         return "<Line(id='%s', number='%s')>" % (

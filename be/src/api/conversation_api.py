@@ -137,7 +137,6 @@ class Conversation_API(Resource):
                         'error': 'conversation not found'
                     }, 404
             message = Message(
-                line_id=line.id,
                 conversation_id=conversation.id,
                 message_type=MessageType.OUT,
                 status=MessageStatus.SENDING,

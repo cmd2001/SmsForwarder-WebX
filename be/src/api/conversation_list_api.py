@@ -10,7 +10,7 @@ from flask_jwt_extended import jwt_required
 from flask_restx import Resource, reqparse
 from app import api, config
 from model.conversation import Conversation
-from model.message import MessageStatus
+from model.message import MessageStatus, Message
 
 
 @api.route('/api/v1/conversation/list')
@@ -31,13 +31,15 @@ class Conversation_List_API(Resource):
         conversations = conversations[:limit]
         ret = []
         for conversation in conversations:
+            last_message = Message.query.filter_by(
+                id=conversation.last_message_id).first()
             ret.append(
                 {
                     'conversation_id': conversation.id,
-                    'last_message_time': conversation.last_message.display_time.astimezone(config['TIMEZONE']).strftime(
+                    'last_message_time': last_message.display_time.astimezone(config['TIMEZONE']).strftime(
                         '%Y-%m-%d %H:%M:%S'),
-                    'last_message_content': conversation.last_message.content,
-                    'last_message_is_unread': conversation.last_message.status == MessageStatus.RECEIVED,
+                    'last_message_content': last_message.content,
+                    'last_message_is_unread': last_message.status == MessageStatus.RECEIVED,
                     'peer_number': conversation.peer_number,
                     'via_line_number': conversation.line.number,
                 })
