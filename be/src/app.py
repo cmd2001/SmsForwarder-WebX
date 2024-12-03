@@ -4,7 +4,7 @@
 @File: app.py
 """
 
-from jwt import DecodeError
+from jwt import DecodeError, ExpiredSignatureError
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api
@@ -44,6 +44,8 @@ def create_app():
 
     @api.errorhandler(DecodeError)
     @app.errorhandler(DecodeError)
+    @api.errorhandler(ExpiredSignatureError)
+    @app.errorhandler(ExpiredSignatureError)
     def handle_decode_error(e):
         response = {
             "status": 401,
