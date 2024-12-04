@@ -145,14 +145,15 @@ const MessageList: React.FC = () => {
           threshold={500}
         >
           <List
-            sx={{
-              flexGrow: 1,
-              pl: 2,
-              pr: 2,
-              pb: 7,
-              display: 'flex',
-              flexDirection: 'column-reverse',
-            }}
+            // sx={{
+            //   flexGrow: 1,
+            //   pl: 2,
+            //   pr: 2,
+            //   pb: 16,
+            //   display: 'flex',
+            //   flexDirection: 'column-reverse',
+            // }}
+            className="messages-list"
           >
             {messages.map((message, index) => (
               <ListItem
@@ -192,16 +193,7 @@ const MessageList: React.FC = () => {
         </InfiniteScroll>
         <Paper
           component="form"
-          sx={{
-            p: '2px 4px',
-            display: 'flex',
-            alignItems: 'center',
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            width: '100%',
-          }}
+          className="paper-bottom-input input-group-padding"
         >
           <TextField
             sx={{ ml: 1, flex: 1 }}

@@ -99,7 +99,7 @@ const LineList: React.FC = () => {
         </List>
       </Box>
       <Paper
-        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+        className='paper-bottom-nav'
         elevation={3}
       >
         <BottomNavigation

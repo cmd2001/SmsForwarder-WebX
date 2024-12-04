@@ -84,7 +84,7 @@ const NewConversation: React.FC = () => {
             {error}
           </Typography>
         )}
-        <Box sx={{ display: 'flex' }} style={{ width: '100%' }}>
+        <Box className='input-group-padding'>
           <TextField
             label="Peer Number"
             type="number"
@@ -112,16 +112,7 @@ const NewConversation: React.FC = () => {
       </Box>
       <Paper
         component="form"
-        sx={{
-          p: '2px 4px',
-          display: 'flex',
-          alignItems: 'center',
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          width: '100%',
-        }}
+        className='paper-bottom-input'
       >
         <TextField
           sx={{ ml: 1, flex: 1 }}

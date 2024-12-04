@@ -25,6 +25,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import { handleLogout, fetchConversations } from '../services/api';
 import { parseTime } from '../services/utils';
 import { Conversation } from '../interfaces/Conversation';
+import { env } from 'process';
 
 const ConversationList: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -166,7 +167,7 @@ const ConversationList: React.FC = () => {
         </InfiniteScroll>
       </Box>
       <Paper
-        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+        className='paper-bottom-nav'
         elevation={3}
       >
         <BottomNavigation
