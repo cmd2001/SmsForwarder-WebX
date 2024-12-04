@@ -11,4 +11,5 @@ RUN yarn build
 
 FROM caddy:2-alpine
 COPY --from=0 /app/build /srv
-CMD ["caddy", "file-server", "--root", "/srv", "--listen", ":3000"]
+ADD ./Caddyfile /etc/caddy/Caddyfile
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
