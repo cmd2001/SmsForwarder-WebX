@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "./react-infinite-scroll-component/index";
 import {
   Box,
   Typography,
@@ -42,9 +42,9 @@ const MessageList: React.FC = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [start, setStart] = useState(0);
   const [open, setOpen] = useState(false);
-  const limit = 10;
+  const limit = 20;
 
-  const loadMessages = async (page: number, reset: boolean = false) => {
+  const loadMessages = async (reset: boolean = false) => {
     if (!conversationId) return;
     if (start === 0 && !reset) return;
     try {
@@ -72,7 +72,7 @@ const MessageList: React.FC = () => {
     setLineNumber(null);
     setPeerNumber(null);
     setOpen(false);
-    loadMessages(0, true);
+    loadMessages(true);
   }, [conversationId]);
 
 
@@ -99,8 +99,8 @@ const MessageList: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+    <Box>
+      < CssBaseline />
       <AppBar>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -136,24 +136,18 @@ const MessageList: React.FC = () => {
             {error}
           </Typography>
         )}
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={loadMessages}
-          hasMore={hasMoreMessages}
-          isReverse
-          initialLoad={false}
-          threshold={500}
+        <List
+          className="messages-list"
+        // style={{ display: "flex", flexDirection: "column-reverse", overflow: "auto" }}
         >
-          <List
-            // sx={{
-            //   flexGrow: 1,
-            //   pl: 2,
-            //   pr: 2,
-            //   pb: 16,
-            //   display: 'flex',
-            //   flexDirection: 'column-reverse',
-            // }}
-            className="messages-list"
+          <InfiniteScroll
+            dataLength={messages.length}
+            next={loadMessages}
+            hasMore={hasMoreMessages}
+            inverse={true}
+            loader={<React.Fragment>Loading...</React.Fragment>}
+            style={{ display: "flex", flexDirection: "column-reverse" }}
+            scrollThreshold={'80%'}
           >
             {messages.map((message, index) => (
               <ListItem
@@ -189,8 +183,8 @@ const MessageList: React.FC = () => {
                 </Box>
               </ListItem>
             ))}
-          </List>
-        </InfiniteScroll>
+          </InfiniteScroll>
+        </List>
         <Paper
           component="form"
           className="paper-bottom-input input-group-padding"
@@ -249,7 +243,7 @@ const MessageList: React.FC = () => {
           </DialogActions>
         </Dialog>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

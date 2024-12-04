@@ -39,8 +39,8 @@
   padding-left: 24px !important;
   padding-right: 24px !important;
   padding-bottom: calc(72px + env(safe-area-inset-bottom) * 3 / 4) !important;
-  display: flex !important;
-  flex-direction: column-reverse !important;
+  /* display: flex !important; */
+  /* flex-direction: column-reverse !important; */
 }
 
 .input-group-padding {

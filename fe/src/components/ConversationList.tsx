@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "./react-infinite-scroll-component/index";
 import {
   Box,
   Typography,
@@ -36,7 +36,7 @@ const ConversationList: React.FC = () => {
   const limit = 20;
   const navigate = useNavigate();
 
-  const loadConversations = async (page: number, reset: boolean = false) => {
+  const loadConversations = async (reset: boolean = false) => {
     if (start === 0 && !reset) return;
     try {
       const response = await fetchConversations(start, limit);
@@ -59,7 +59,7 @@ const ConversationList: React.FC = () => {
   useEffect(() => {
     setConversations([]);
     setHasMoreConversations(true);
-    loadConversations(0, true);
+    loadConversations(true);
   }, []);
 
   const handleConversationClick = (conversationId: number) => {
@@ -103,17 +103,18 @@ const ConversationList: React.FC = () => {
             {error}
           </Typography>
         )}
-        <InfiniteScroll
-          pageStart={limit}
-          loadMore={loadConversations}
-          hasMore={hasMoreConversations}
-          initialLoad={false}
+        <List sx={{
+          pl: 0,
+          pr: 0,
+          pb: 7,
+        }}
         >
-          <List sx={{
-            pl: 0,
-            pr: 0,
-            pb: 7,
-          }}>
+          <InfiniteScroll
+            dataLength={conversations.length}
+            next={loadConversations}
+            hasMore={hasMoreConversations}
+            loader={<text>Loading...</text>}
+          >
             {conversations.map((conversation) => (
               <ListItem
                 key={conversation.conversation_id}>
@@ -163,8 +164,8 @@ const ConversationList: React.FC = () => {
                 </ListItemButton>
               </ListItem>
             ))}
-          </List>
-        </InfiniteScroll>
+          </InfiniteScroll>
+        </List>
       </Box>
       <Paper
         className='paper-bottom-nav'
