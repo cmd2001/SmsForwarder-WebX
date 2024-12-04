@@ -8,7 +8,6 @@ from datetime import datetime
 from flask_jwt_extended import jwt_required
 
 from datetime import datetime
-import pytz
 
 from flask_restx import Resource, reqparse
 from app import api, db, config
@@ -65,6 +64,7 @@ class Conversation_API(Resource):
             }, 200
         except Exception as e:
             db.session.rollback()
+            api.logger.error(F'Failed to get conversation: {str(e)}')
             return {'message': str(e)}, 500
 
     @jwt_required()
@@ -88,6 +88,7 @@ class Conversation_API(Resource):
             }, 200
         except Exception as e:
             db.session.rollback()
+            api.logger.error(F'Failed to delete conversation: {str(e)}')
             return {'message': str(e)}, 500
 
     @jwt_required()
@@ -148,12 +149,14 @@ class Conversation_API(Resource):
             conversation.last_message_id = message.id
         except Exception as e:
             db.session.rollback()
+            api.logger.error(F'Failed to create message: {str(e)}')
             return {'message': str(e)}, 500
 
         # now call the message sending API
+        # TODO: migrate to celery for async task
         try:
             if not config["DEBUG"]:
-                res = requests.post(config["SEND_API_SCHEME"].format(line.endpoint), json={
+                res = requests.post(config["SEND_API_SCHEME"].format(line.addr), json={
                     'data': {
                         'sim_slot': line.sim_slot,
                         'phone_numbers': conversation.peer_number,
@@ -176,4 +179,5 @@ class Conversation_API(Resource):
         except Exception as e:
             message.status = MessageStatus.ERROR
             db.session.commit()
+            api.logger.error(F'Send message to core failed: {str(e)}')
             return {'message': str(e)}, 500

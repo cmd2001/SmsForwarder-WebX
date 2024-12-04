@@ -89,7 +89,7 @@ const LineList: React.FC = () => {
                   }
                   secondary={
                     <Typography>
-                      sim{line.sim_slot} on {line.device_mark} @ {line.endpoint}
+                      sim{line.sim_slot} on {line.device_mark} @ {line.addr}
                     </Typography>
                   }
                 />

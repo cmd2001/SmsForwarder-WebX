@@ -7,6 +7,12 @@
 from app import db
 from sqlalchemy import Column, DateTime, Integer, String, Enum, func
 from sqlalchemy.orm import relationship
+import enum
+
+
+class LineType(enum.Enum):
+    SMSFORWARDER = 'SMSForwarder'
+    UNKNOWN = 'UNKNOWN'
 
 
 class Line(db.Model):
@@ -15,11 +21,13 @@ class Line(db.Model):
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
+    line_type = Column(Enum(LineType), nullable=False,
+                       default=LineType.SMSFORWARDER)
     number = Column(String(255), nullable=False, unique=True)
     sim_slot = Column(Integer, nullable=False)
     device_mark = Column(String(255), nullable=False)
-    # send api endpoint for device
-    endpoint = Column(String(255), nullable=False)
+    # send api addr for device
+    addr = Column(String(255), nullable=False)
     conversations = relationship(
         "Conversation",
         back_populates="line",
@@ -37,5 +45,5 @@ class Line(db.Model):
             'number': self.number,
             'sim_slot': self.sim_slot,
             'device_mark': self.device_mark,
-            'endpoint': self.endpoint
+            'addr': self.addr
         }

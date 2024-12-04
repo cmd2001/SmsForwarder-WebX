@@ -177,11 +177,11 @@ const LineComponent: React.FC = () => {
           </ListItem>
           <ListItem
             secondaryAction={
-              <IconButton edge="end" aria-label="edit-endpoint"
+              <IconButton edge="end" aria-label="edit-addr"
                 onClick={() => {
-                  setCurrentEditAttr('endpoint');
+                  setCurrentEditAttr('addr');
                   setCurrentEditAttrDisplay('Host');
-                  setCurrentEdit(line?.endpoint as string);
+                  setCurrentEdit(line?.addr as string);
                   setOpen(true);
                 }}
               >
@@ -189,7 +189,7 @@ const LineComponent: React.FC = () => {
               </IconButton>
             }>
             <ListItemText
-              primary={line?.endpoint}
+              primary={line?.addr}
               className='listItem-padding'
               secondary='Host'
             />
@@ -206,7 +206,7 @@ const LineComponent: React.FC = () => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {(currentEditAttr === 'sim_slot' || currentEditAttr === 'endpoint') && (
+              {(currentEditAttr === 'sim_slot' || currentEditAttr === 'addr') && (
                 <Typography color="error">EDITING {currentEditAttrDisplay} IS DANGEROUS AND MAY DAMAGE SENDING</Typography>
               )}
               {(currentEditAttr === 'line_id') && (

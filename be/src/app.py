@@ -4,6 +4,7 @@
 @File: app.py
 """
 
+from pytimeparse.timeparse import timeparse
 from jwt import DecodeError, ExpiredSignatureError
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +26,8 @@ def create_app():
     global app
     app = Flask("SmsForwarder-WebX")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timeparse(
+        os.environ.get("JWT_ACCESS_TOKEN_EXPIRES") or "3D")
 
     global config
     config["BACKEND_TOKEN"] = os.environ.get("BACKEND_TOKEN")

@@ -11,7 +11,7 @@ with app.app_context():
     for i in range(1, 200):
         number_line = '888888888' + str(i)
         line = Line(number=number_line, sim_slot=i,
-                    device_mark=f"device_mark{i}", endpoint=f"endpoint{i}")
+                    device_mark=f"device_mark{i}", addr=f"addr{i}")
         db.session.add(line)
     db.session.commit()
 

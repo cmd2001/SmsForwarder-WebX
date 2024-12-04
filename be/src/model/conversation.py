@@ -8,8 +8,6 @@ from typing import List
 from app import db
 from sqlalchemy import Column, DateTime, Integer, String, func, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-# from model.line import Line
-# from model.message import Message
 
 
 class Conversation(db.Model):

@@ -68,7 +68,7 @@ Get line info with id=x
   "number": "18888888888",
   "sim_slot": "1",
   "device_mark": "samsung",
-  "endpoint": "192.168.1.1"
+  "addr": "192.168.1.1"
 }
 ```
 

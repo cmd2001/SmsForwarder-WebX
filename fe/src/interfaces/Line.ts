@@ -3,5 +3,5 @@ export interface Line {
   number: string;
   sim_slot: number;
   device_mark: string;
-  endpoint: string;
+  addr: string;
 }

@@ -43,6 +43,7 @@ class Line_API(Resource):
             return {'message': 'Line deleted'}, 200
         except Exception as e:
             db.session.rollback()
+            api.logger.error(F'Failed to delete line: {str(e)}')
             return {'message': str(e)}, 500
 
     @jwt_required()
@@ -56,11 +57,11 @@ class Line_API(Resource):
                             help='edit sim slot', location='json')
         parser.add_argument('device_mark', type=str, required=False,
                             help='edit device mark', location='json')
-        parser.add_argument('endpoint', type=str, required=False,
-                            help='edit endpoint, hostname only as full endpoint will be generated with scheme', location='json')
+        parser.add_argument('addr', type=str, required=False,
+                            help='edit addr, hostname only as full addr will be generated with scheme', location='json')
         args = parser.parse_args()
-        line_id, number, sim_slot, device_mark, endpoint = args.get(
-            'id'), args.get('number'), args.get('sim_slot'), args.get('device_mark'), args.get('endpoint')
+        line_id, number, sim_slot, device_mark, addr = args.get(
+            'id'), args.get('number'), args.get('sim_slot'), args.get('device_mark'), args.get('addr')
         if not line_id:
             return {'message': 'line_id is required'}, 400
         line = Line.query.get(line_id)
@@ -73,10 +74,11 @@ class Line_API(Resource):
                 line.sim_slot = sim_slot
             if device_mark:
                 line.device_mark = device_mark
-            if endpoint:
-                line.endpoint = endpoint
+            if addr:
+                line.addr = addr
             db.session.commit()
             return line.to_json(), 200
         except Exception as e:
             db.session.rollback()
+            api.logger.error(F'Failed to edit line: {str(e)}')
             return {'message': str(e)}, 500
