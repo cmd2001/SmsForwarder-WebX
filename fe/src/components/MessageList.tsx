@@ -83,13 +83,13 @@ const MessageList: React.FC = () => {
       .then((response) => {
         // read from response and update messages
         setMessages((prevMessages) => [
-          ...prevMessages,
           {
             display_time: response.display_time,
             content: newMessage,
             type: 'OUT',
             status: 'SENT',
           },
+          ...prevMessages,
         ]);
       })
       .catch(() => {
