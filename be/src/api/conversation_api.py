@@ -70,7 +70,12 @@ class Conversation_API(Resource):
 
     @jwt_required()
     def delete(self):
-        conversation_id = request.args.get('id', None, type=int)
+        # conversation_id = request.args.get('id', None, type=int)
+        parser = reqparse.RequestParser()
+        parser.add_argument('id', type=int, required=True,
+                            help='conversation_id is required', location='args')
+        args = parser.parse_args()
+        conversation_id = args.get('id')
         if not conversation_id:
             return {
                 'error': 'conversation_id is required'
