@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_celery import celery_init_app
 import os
 import pytz
 
@@ -20,6 +21,7 @@ db = SQLAlchemy()
 jwt = JWTManager()
 config = dict()
 migrate = Migrate()
+celery_app = None
 
 
 def create_app():
@@ -68,5 +70,14 @@ def create_app():
     with app.app_context():
         db.create_all()
     migrate = Migrate(app, db)
+
+    app.config.from_mapping(
+        CELERY=dict(
+            broker_url=os.environ.get("CELERY_BROKER_URI"),
+            result_backend=os.environ.get("CELERY_RESULT_BACKEND"),
+            task_ignore_result=True,
+        ),
+    )
+    celery_app = celery_init_app(app)
 
     return app, api

@@ -5,6 +5,8 @@
 ```sh
 export SEND_API_SCHEME="http://{}:5000/sms/send"
 export DB_URI="sqlite:///./database.db"
+export CELERY_BROKER_URI="amqp://smsforwarder:smsforwarder@localhost:5672/smsforwarder"
+export CELERY_RESULT_BACKEND="rpc://"
 export BACKEND_TOKEN="BACKEND_TOKEN"
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="admin"
@@ -27,8 +29,8 @@ python3 debug_entry.py
   "device_mark": "[device_mark]",
   "app_version": "[app_version]",
   "card_slot": "[card_slot]",
-  "receive_time": "[receive_time]"
-  "token": BACKEND_TOKEN
+  "receive_time": "[receive_time]",
+  "token": "BACKEND_TOKEN"
 }
 ```
 

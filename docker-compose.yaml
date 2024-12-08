@@ -1,0 +1,10 @@
+# rabbit mq
+services:
+  rabbitmq:
+    image: rabbitmq:3
+    ports:
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: smsforwarder
+      RABBITMQ_DEFAULT_PASS: smsforwarder
+      RABBITMQ_DEFAULT_VHOST: smsforwarder

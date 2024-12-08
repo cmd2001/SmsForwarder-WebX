@@ -14,7 +14,7 @@ from app import api, db, config
 from model.conversation import Conversation
 from model.line import Line
 from model.message import Message, MessageStatus, MessageType
-import requests
+from tasks.message_tasks import handle_send_message
 
 
 @api.route('/api/v1/conversation')
@@ -49,6 +49,7 @@ class Conversation_API(Resource):
                     message.status = MessageStatus.READ
                 ret.append(
                     {
+                        'message_id': message.id,
                         'display_time': message.display_time.astimezone(config['TIMEZONE']).strftime('%Y-%m-%d %H:%M:%S'),
                         'content': message.content,
                         'type': message.message_type.value,
@@ -147,37 +148,24 @@ class Conversation_API(Resource):
             db.session.add(message)
             db.session.flush()
             conversation.last_message_id = message.id
+            db.session.commit()
         except Exception as e:
             db.session.rollback()
             api.logger.error(F'Failed to create message: {str(e)}')
             return {'message': str(e)}, 500
 
-        # now call the message sending API
-        # TODO: migrate to celery for async task
-        try:
-            if not config["DEBUG"]:
-                res = requests.post(config["SEND_API_SCHEME"].format(line.addr), json={
-                    'data': {
-                        'sim_slot': line.sim_slot,
-                        'phone_numbers': conversation.peer_number,
-                        'msg_content': message.content
-                    },
-                    'timestamp': int(datetime.now().timestamp() * 1000),
-                    'sign': ''
-                })
-                if res.status_code != 200:
-                    raise Exception(res.text)
-            message.status = MessageStatus.SENT
-            db.session.commit()
-            return {
-                'conversation_id': conversation.id,
-                'display_time': message.display_time.astimezone(config['TIMEZONE']).strftime('%Y-%m-%d %H:%M:%S'),
-                'content': message.content,
-                'type': message.message_type.value,
-                'status': message.status.value,
-            }, 200
-        except Exception as e:
-            message.status = MessageStatus.ERROR
-            db.session.commit()
-            api.logger.error(F'Send message to core failed: {str(e)}')
-            return {'message': str(e)}, 500
+        handle_send_message.delay({
+            'message_id': message.id,
+            'sim_slot': line.sim_slot,
+            'phone_numbers': conversation.peer_number,
+            'msg_content': message.content,
+            'addr': line.addr
+        })
+
+        return {
+            'message_id': message.id,
+            'display_time': message.display_time.astimezone(config['TIMEZONE']).strftime('%Y-%m-%d %H:%M:%S'),
+            'content': message.content,
+            'type': message.message_type.value,
+            'status': message.status.value,
+        }, 200
