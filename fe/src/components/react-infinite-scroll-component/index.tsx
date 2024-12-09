@@ -76,11 +76,15 @@ export default class InfiniteScroll extends Component<Props, State> {
     }
 
     if (this.props.inverse) {
-      const target =
-        this.props.height || document.documentElement.scrollTop
-          ? document.documentElement
-          : document.body;
-      scrollTo(0, target.scrollHeight);
+      for (let i = 1; i <= 5; i++) {
+        setTimeout(() => {
+          const target =
+            this.props.height || document.documentElement.scrollTop
+              ? document.documentElement
+              : document.body;
+          scrollTo(0, target.scrollHeight);
+        }, i * 100);
+      }
       // window.scroll({ top: target.scrollHeight, behavior: 'smooth' });
     }
 
@@ -321,6 +325,7 @@ export default class InfiniteScroll extends Component<Props, State> {
     // call the `next` function in the props to trigger the next data fetch
     if (atBottom && this.props.hasMore) {
       if (this.props.inverse) {
+        console.log('manually scrolling to bottom');
         const oldScrollHeight = target.scrollHeight;
         const oldScrollTop = target.scrollTop;
         this.actionTriggered = true;

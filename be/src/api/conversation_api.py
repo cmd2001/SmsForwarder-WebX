@@ -37,10 +37,16 @@ class Conversation_API(Resource):
                 'error': 'conversation_id is required'
             }, 400
         conversation = Conversation.query.get(conversation_id)
-        messages = Message.query.filter_by(conversation_id=conversation_id).order_by(
-            Message.id.desc()).offset(start).limit(limit + 1).all()
-        has_next = len(messages) > limit
-        messages = messages[:limit]
+
+        if limit != -1:
+            messages = Message.query.filter_by(conversation_id=conversation_id).order_by(
+                Message.id.desc()).offset(start).limit(limit + 1).all()
+            has_next = len(messages) > limit
+            messages = messages[:limit]
+        else:
+            messages = Message.query.filter_by(conversation_id=conversation_id).order_by(
+                Message.id.desc()).all()
+            has_next = False
 
         try:
             ret = []

@@ -42,7 +42,7 @@ const MessageList: React.FC = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [start, setStart] = useState(0);
   const [open, setOpen] = useState(false);
-  const limit = 20;
+  const limit = -1;
 
   const loadMessages = async (reset: boolean = false) => {
     if (!conversationId) return;
