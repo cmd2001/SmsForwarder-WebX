@@ -21,6 +21,7 @@ import {
   Divider,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   fetchLine,
@@ -67,12 +68,24 @@ const LineComponent: React.FC = () => {
     editLine(lineId as string, currentEditAttr as string, currentEdit as string);
   }
 
+  const handleBack = () => {
+    window.location.href = '/line';
+  }
+
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar>
         <Toolbar>
+          <IconButton
+            size="large"
+            aria-label="back"
+            color="inherit"
+            onClick={handleBack}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
           <Typography variant="h6" component="div"
             sx={{
               position: 'absolute',
@@ -82,20 +95,6 @@ const LineComponent: React.FC = () => {
             }}>
             {line?.number}
           </Typography>
-          <IconButton
-            size="large"
-            aria-label="delete"
-            color="inherit"
-            onClick={() => {
-              setCurrentEditAttr('line_id');
-              setCurrentEditAttrDisplay('Line ID');
-              setCurrentEdit(line?.id as any as string);
-              setOpen(true);
-            }}
-            sx={{ marginLeft: 'auto' }}
-          >
-            <DeleteIcon />
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Box component="main" sx={{ p: 3 }} className="box-main">
@@ -106,7 +105,19 @@ const LineComponent: React.FC = () => {
           </Typography>
         )}
         <List>
-          <ListItem>
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" aria-label="delete"
+                onClick={() => {
+                  setCurrentEditAttr('line_id');
+                  setCurrentEditAttrDisplay('Line ID');
+                  setCurrentEdit(line?.id as any as string);
+                  setOpen(true);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            }>
             <ListItemText
               primary={line?.id}
               className='listItem-padding'
