@@ -21,14 +21,13 @@ import {
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {
-  handleLogout,
   fetchMessages,
   sendMessage,
   deleteConversation,
 } from '../services/api';
-import { parseTime } from '../services/utils';
+import { parseTimeDetailed } from '../services/utils';
 import { pink, grey } from '@mui/material/colors';
 import { Message } from '../interfaces/Message';
 
@@ -98,32 +97,46 @@ const MessageList: React.FC = () => {
     setNewMessage('');
   };
 
+  const handleBack = () => {
+    window.location.href = '/';
+  };
+
   return (
     <Box>
       < CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {peerNumber}{' '}
-            <Typography variant="caption" display="inline">
+          <IconButton
+            size="large"
+            aria-label="back"
+            color="inherit"
+            onClick={handleBack}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
+          <Typography variant="h6" component="div"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+            }}>
+            {peerNumber}
+            <Typography
+              variant="caption"
+              display="block"
+            >
               via {lineNumber}
             </Typography>
           </Typography>
           <IconButton
             size="large"
-            aria-label="logout"
-            color="inherit"
-            onClick={handleLogout}
-          >
-            <LogoutIcon />
-          </IconButton>
-          <IconButton
-            size="large"
-            aria-label="logout"
+            aria-label="delete"
             color="inherit"
             onClick={() => {
               setOpen(true);
             }}
+            sx={{ marginLeft: 'auto' }}
           >
             <DeleteIcon />
           </IconButton>
@@ -178,7 +191,7 @@ const MessageList: React.FC = () => {
                     mt={1}
                     align={message.type === 'IN' ? 'left' : 'right'}
                   >
-                    {parseTime(message.display_time)}
+                    {parseTimeDetailed(message.display_time)}
                   </Typography>
                 </Box>
               </ListItem>

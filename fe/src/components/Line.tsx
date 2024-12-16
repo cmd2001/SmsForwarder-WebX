@@ -20,11 +20,9 @@ import {
   ListItemText,
   Divider,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  handleLogout,
   fetchLine,
   deleteLine,
   editLine,
@@ -75,16 +73,28 @@ const LineComponent: React.FC = () => {
       <CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+            }}>
             {line?.number}
           </Typography>
           <IconButton
             size="large"
-            aria-label="logout"
+            aria-label="delete"
             color="inherit"
-            onClick={handleLogout}
+            onClick={() => {
+              setCurrentEditAttr('line_id');
+              setCurrentEditAttrDisplay('Line ID');
+              setCurrentEdit(line?.id as any as string);
+              setOpen(true);
+            }}
+            sx={{ marginLeft: 'auto' }}
           >
-            <LogoutIcon />
+            <DeleteIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -96,19 +106,7 @@ const LineComponent: React.FC = () => {
           </Typography>
         )}
         <List>
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete"
-                onClick={() => {
-                  setCurrentEditAttr('line_id');
-                  setCurrentEditAttrDisplay('Line ID');
-                  setCurrentEdit(line?.id as any as string);
-                  setOpen(true);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            }>
+          <ListItem>
             <ListItemText
               primary={line?.id}
               className='listItem-padding'

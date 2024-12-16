@@ -19,13 +19,11 @@ import {
   Paper,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import LogoutIcon from '@mui/icons-material/Logout';
 import MessageIcon from '@mui/icons-material/Message';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { handleLogout, fetchConversations } from '../services/api';
+import { fetchConversations } from '../services/api';
 import { parseTime } from '../services/utils';
 import { Conversation } from '../interfaces/Conversation';
-import { env } from 'process';
 
 const ConversationList: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -75,7 +73,13 @@ const ConversationList: React.FC = () => {
       <CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+            }}>
             Conversations
           </Typography>
           <IconButton
@@ -83,16 +87,9 @@ const ConversationList: React.FC = () => {
             aria-label="new"
             color="inherit"
             onClick={handleNewConversation}
+            sx={{ marginLeft: 'auto' }}
           >
             <AddIcon />
-          </IconButton>
-          <IconButton
-            size="large"
-            aria-label="logout"
-            color="inherit"
-            onClick={handleLogout}
-          >
-            <LogoutIcon />
           </IconButton>
         </Toolbar>
       </AppBar>

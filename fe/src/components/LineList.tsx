@@ -17,10 +17,9 @@ import {
   BottomNavigationAction,
   Paper,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import MessageIcon from '@mui/icons-material/Message';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { handleLogout, fetchLines } from '../services/api';
+import { fetchLines } from '../services/api';
 import { Line } from '../interfaces/Line';
 
 const LineList: React.FC = () => {
@@ -51,17 +50,15 @@ const LineList: React.FC = () => {
       <CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+            }}>
             Lines
           </Typography>
-          <IconButton
-            size="large"
-            aria-label="logout"
-            color="inherit"
-            onClick={handleLogout}
-          >
-            <LogoutIcon />
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Box component="main" className="box-main">

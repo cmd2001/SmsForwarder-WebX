@@ -23,7 +23,13 @@ const Login: React.FC = () => {
       <CssBaseline />
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div"
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+            }}>
             Welcome to SMS Web Panel
           </Typography>
         </Toolbar>
