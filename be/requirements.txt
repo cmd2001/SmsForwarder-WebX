@@ -25,7 +25,7 @@ gunicorn==23.0.0
 idna==3.10
 importlib_resources==6.4.5
 itsdangerous==2.2.0
-Jinja2==3.1.4
+Jinja2==3.1.5
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 kombu==5.4.2
