@@ -33,6 +33,8 @@ class Conversation_List_API(Resource):
         for conversation in conversations:
             last_message = Message.query.filter_by(
                 id=conversation.last_message_id).first()
+            if last_message is None:
+                continue
             ret.append(
                 {
                     'conversation_id': conversation.id,
