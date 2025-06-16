@@ -9,7 +9,7 @@ from datetime import datetime
 from flask import request
 from flask_restx import Resource, reqparse
 from app import api, config
-from tasks.message_tasks import handle_receive_message
+from tasks.message_tasks import handle_receive_message, handle_receive_message_ios
 
 
 @api.route('/api/v1/message')
@@ -44,6 +44,35 @@ class Message_API(Resource):
             "receive_time": args['receive_time'],
             "remote_addr": request.remote_addr,
             "user_agent": request.user_agent.string
+        })
+
+        return {'message': 'success'}, 200
+
+@api.route('/api/v1/message_ios')
+class Message_API(Resource):
+    def post(self):  # this api is defined to be used in intra-service communication, so it is only protected by a plain token
+        parser = reqparse.RequestParser()
+        parser.add_argument('from', type=str, required=True,
+                            help='from is required', location='json')
+        parser.add_argument('to', type=str, required=True,
+                            help='to is required', location='json')
+        parser.add_argument('content', type=str, required=True,
+                            help='content is required', location='json')
+        parser.add_argument('device_mark', type=str, required=True,
+                            help='device_mark is required', location='json')
+        parser.add_argument('token', type=str, required=True,
+                            help='token is required', location='json')
+        args = parser.parse_args()
+
+        if args['token'] != config['BACKEND_TOKEN']:
+            return {'message': 'Invalid token'}, 401
+
+        handle_receive_message_ios.delay({
+            "peer_number": args['from'],
+            "receiver": args['to'],
+            "content": args['content'],
+            "device_mark": args['device_mark'],
+            "remote_addr": request.remote_addr,
         })
 
         return {'message': 'success'}, 200

@@ -79,6 +79,49 @@ def handle_receive_message(args: dict) -> None:
         db.session.rollback()
         logger.error(f"Failed to save message: {e}")
 
+@shared_task()
+def handle_receive_message_ios(args: dict) -> None:
+    line_number = args['receiver'].replace(' ', '')
+    line_type = LineType.UNKNOWN
+    sim_slot = 0
+
+    try:
+        line = Line.query.filter_by(number=line_number).first()
+        if not line:
+            line = Line(number=line_number, sim_slot=sim_slot,
+                        device_mark=args["device_mark"], addr=args['remote_addr'])
+            db.session.add(line)
+            db.session.flush()
+        if line.sim_slot != sim_slot:
+            line.sim_slot = sim_slot
+        if line.device_mark != args["device_mark"]:
+            line.device_mark = args["device_mark"]
+        if line.addr != args['remote_addr']:
+            line.addr = args['remote_addr']
+
+        conversation = Conversation.query.filter_by(
+            peer_number=args["peer_number"], line_id=line.id).first()
+        if not conversation:
+            conversation = Conversation(
+                peer_number=args["peer_number"], line_id=line.id)
+            db.session.add(conversation)
+            db.session.flush()
+
+        message = Message(
+            conversation_id=conversation.id,
+            message_type=MessageType.IN,
+            status=MessageStatus.RECEIVED,
+            content=args["content"],
+            display_time=datetime.now(tzinfo)
+        )
+        db.session.add(message)
+        db.session.flush()
+        conversation.last_message_id = message.id
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Failed to save message: {e}")
+
 
 @shared_task()
 def handle_send_message(args: dict) -> None:
