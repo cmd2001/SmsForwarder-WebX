@@ -38,10 +38,10 @@ const ConversationList: React.FC = () => {
     if (start === 0 && !reset) return;
     try {
       const response = await fetchConversations(start, limit);
-      if (response.conversations.length < limit) {
+      if (!response.has_next) {
         setHasMoreConversations(false);
       }
-      console.log(start, reset);
+      console.log(start, reset, response.has_next);
       if (reset) {
         setConversations(response.conversations);
         setStart(limit);
