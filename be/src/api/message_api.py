@@ -10,6 +10,8 @@ from flask import request
 from flask_restx import Resource, reqparse
 from app import api, config
 from tasks.message_tasks import handle_receive_message, handle_receive_message_ios
+import logging
+logger = logging.getLogger(__name__)
 
 
 @api.route('/api/v1/message')
@@ -63,6 +65,7 @@ class Message_API(Resource):
         parser.add_argument('token', type=str, required=True,
                             help='token is required', location='json')
         args = parser.parse_args()
+        logger.error("message_ios called: %s", args)
 
         if args['token'] != config['BACKEND_TOKEN']:
             return {'message': 'Invalid token'}, 401

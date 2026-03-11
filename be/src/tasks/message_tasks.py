@@ -11,6 +11,7 @@ from model.line import Line, LineType
 from model.message import Message, MessageType, MessageStatus
 import requests
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import logging
 
 logger = logging.getLogger(__name__)
@@ -112,7 +113,7 @@ def handle_receive_message_ios(args: dict) -> None:
             message_type=MessageType.IN,
             status=MessageStatus.RECEIVED,
             content=args["content"],
-            display_time=datetime.now(tzinfo)
+            display_time=datetime.now(config["TIMEZONE"])
         )
         db.session.add(message)
         db.session.flush()
